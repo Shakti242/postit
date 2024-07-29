@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from "react-query"
 import { useState } from "react"
 import toast from "react-hot-toast"
 import axios, { AxiosError } from "axios"
+import Link from "next/link"
 
 export default function CreatePost() {
   const [title, setTitle] = useState("")
@@ -62,6 +63,12 @@ export default function CreatePost() {
         >
           Create post
         </button>
+        <div className="my-4">
+          <Link href="/playground" className="text-sm bg-teal-600 text-white py-2 px-6 rounded-xl disabled:opacity-25">
+
+            Go to Playground
+          </Link>
+        </div>
       </div>
     </form>
   )
