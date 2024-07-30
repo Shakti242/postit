@@ -66,7 +66,7 @@ export default function CreatePost() {
         <div className="my-4">
           <Link href="/playground" className="text-sm bg-teal-600 text-white py-2 px-6 rounded-xl disabled:opacity-25">
 
-            Go to Playground
+            Playground
           </Link>
         </div>
       </div>
