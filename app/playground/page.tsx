@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Button } from '../components/button';
+import { Button } from '../components/button';  // Ensure this path is correct
 import {
   Dialog,
   DialogTrigger,
@@ -10,29 +10,50 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter
-} from '../components/dialog';
+} from '../components/dialog';  // Ensure this path is correct
 import { Plus } from 'lucide-react';
 
 const Playground = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [name, setName] = useState('');
+  const [url, setUrl] = useState('');
+  const [links, setLinks] = useState([]);
   const [savedData, setSavedData] = useState(null);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  // Fetch links on component mount
+  useEffect(() => {
+    fetchLinks();
+  }, []);
+
+  const fetchLinks = async () => {
+    try {
+      const response = await axios.get('/api/links/getLinks');
+      setLinks(response.data);
+    } catch (error) {
+      console.error('Failed to fetch links:', error);
+    }
+  };
 
   const openDialog = () => setIsDialogOpen(true);
   const closeDialog = () => setIsDialogOpen(false);
 
   const handleSaveChanges = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // Prevent default form submission
-    console.log('Input Value:', name); // Log the input value
+    e.preventDefault();
+    console.log('Input Values:', { name, url });
     setError('');
+    setLoading(true);
     try {
-      const response = await axios.post('/api/links/addLink', { name });
+      const response = await axios.post('/api/links/addLink', { name, url });
       setSavedData(response.data);
+      setLinks([...links, response.data]); // Update links state with the new link
       closeDialog();
     } catch (error) {
       console.error('Failed to save link:', error);
       setError('Failed to save link. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -49,7 +70,7 @@ const Playground = () => {
         <DialogContent>
           <DialogTitle>Add Content</DialogTitle>
           <DialogDescription>
-            Please enter the name.
+            Please enter the name and URL.
           </DialogDescription>
           <form onSubmit={handleSaveChanges} className="bg-white my-8 p-8 rounded-md">
             <div className="flex flex-col my-4">
@@ -64,26 +85,45 @@ const Playground = () => {
                 required
               />
             </div>
+            <div className="flex flex-col my-4">
+              <label htmlFor="url" className="block text-sm font-medium text-gray-700">URL</label>
+              <input
+                id="url"
+                type="url"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                className="p-4 text-lg rounded-md my-2 bg-gray-200"
+                placeholder="Enter the URL"
+                required
+              />
+            </div>
             <DialogFooter>
-              <Button type="submit" className="bg-blue-500 text-white">Save Changes</Button>
+              <Button type="submit" className="bg-blue-500 text-white" disabled={loading}>
+                {loading ? 'Saving...' : 'Save Changes'}
+              </Button>
               <Button type="button" onClick={closeDialog} className="bg-gray-500 text-white">Cancel</Button>
             </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
 
-      {savedData && (
-        <div className="mt-14 p-8 border rounded-md bg-gray-100">
-          <p><strong>ID:</strong> {savedData.id}</p>
-          <p><strong>Name:</strong> {savedData.name}</p>
-        </div>
-      )}
-
       {error && (
         <div className="mt-4 p-4 border rounded-md bg-red-100 text-red-700">
           {error}
         </div>
       )}
+
+      <div className="mt-14">
+        <h2 className="text-xl font-bold">Saved Links</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4">
+          {links.map(link => (
+            <div key={link.id} className="border rounded-lg p-4 shadow-lg bg-white hover:bg-gray-100 transition">
+              <h3 className="text-lg font-semibold">{link.name}</h3>
+              <p className="text-blue-600"><a href={link.url} target="_blank" rel="noopener noreferrer">{link.url}</a></p>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
