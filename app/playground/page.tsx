@@ -13,12 +13,17 @@ import {
 } from '../components/dialog';  // Ensure this path is correct
 import { Plus } from 'lucide-react';
 
+type Link = {
+  id: string;
+  name: string;
+  url: string;
+};
+
 const Playground = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [name, setName] = useState('');
   const [url, setUrl] = useState('');
-  const [links, setLinks] = useState([]);
-  const [savedData, setSavedData] = useState(null);
+  const [links, setLinks] = useState<Link[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -46,9 +51,10 @@ const Playground = () => {
     setLoading(true);
     try {
       const response = await axios.post('/api/links/addLink', { name, url });
-      setSavedData(response.data);
-      setLinks([...links, response.data]); // Update links state with the new link
+      setLinks((prevLinks) => [...prevLinks, response.data]); // Update links state with the new link
       closeDialog();
+      setName('');
+      setUrl('');
     } catch (error) {
       console.error('Failed to save link:', error);
       setError('Failed to save link. Please try again.');
@@ -115,11 +121,12 @@ const Playground = () => {
 
       <div className="mt-14">
         <h2 className="text-xl font-bold">Saved Links</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {links.map(link => (
             <div key={link.id} className="border rounded-lg p-4 shadow-lg bg-white hover:bg-gray-100 transition">
-              <h3 className="text-lg font-semibold">{link.name}</h3>
-              <p className="text-blue-600"><a href={link.url} target="_blank" rel="noopener noreferrer">{link.url}</a></p>
+              <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-lg font-semibold text-blue-600 hover:underline">
+                {link.name}
+              </a>
             </div>
           ))}
         </div>
