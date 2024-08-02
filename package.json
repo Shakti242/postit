@@ -15,6 +15,8 @@
     "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-slot": "^1.1.0",
     "@tanstack/react-query-devtools": "^4.23.0",
+    "@uploadcare/react-widget": "^2.4.5",
+    "@uploadthing/react": "^6.7.2",
     "axios": "^1.2.5",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -30,7 +32,8 @@
     "react-icons": "^4.7.1",
     "react-query": "^3.39.2",
     "tailwind-merge": "^2.4.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "uploadthing": "^6.13.2"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",

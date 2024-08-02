@@ -9,6 +9,7 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: 'Name and URL are required' });
         }
         try {
+            console.log(name, url);
             const newLink = await prisma.link.create({
                 data: { name, url },
             });

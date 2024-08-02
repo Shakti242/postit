@@ -73,3 +73,19 @@
   --uc-primary-oklch-dark: 69% 0.1768 51.88;
   --uc-primary-oklch-light: 59% 0.1724 51.88;
 }
+
+/* globals.css or styles.css */
+.uploadcare--widget {
+  /* Custom styles for the widget */
+  border: 2px solid #ddd;
+  border-radius: 8px;
+}
+
+.uploadcare--widget .uploadcare--button {
+  background-color: #007bff;
+  color: white;
+}
+
+.uploadcare--widget .uploadcare--button:hover {
+  background-color: #0056b3;
+}
