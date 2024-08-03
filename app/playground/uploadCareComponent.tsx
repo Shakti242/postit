@@ -1,35 +1,37 @@
-// components/UploadcareComponent.tsx
-import React, { useState } from 'react';
-import { Widget } from '@uploadcare/react-widget';
-import '../styles/globals.css';
+import React from 'react';
+import { uploadFile } from '@uploadcare/upload-client';
+
 interface UploadcareComponentProps {
     onUpload: (url: string) => void;
+    onUploadComplete: (url: string) => void; // Add this if it's required
 }
 
-const UploadcareComponent: React.FC<UploadcareComponentProps> = ({ onUpload }) => {
-    const [imageUrl, setImageUrl] = useState<string>('');
-
-    const handleUploadComplete = (fileInfo: any) => {
-        if (fileInfo && fileInfo.cdnUrl) {
-            setImageUrl(fileInfo.cdnUrl);
-            onUpload(fileInfo.cdnUrl);
+const UploadcareComponent: React.FC<UploadcareComponentProps> = ({ onUpload, onUploadComplete }) => {
+    const handleUpload = async (file: File) => {
+        try {
+            const result = await uploadFile(file, {
+                publicKey: '6e694834a8285cd233e7',
+                store: 'auto',
+            });
+            if (result.fileUrl) {
+                onUpload(result.fileUrl);
+                onUploadComplete(result.fileUrl); // Call this function when upload is complete
+            }
+        } catch (error) {
+            console.error('Upload failed:', error);
         }
     };
 
     return (
-        <div>
-            <Widget
-                publicKey="your_public_key_here" // Replace with your actual public key
-                clearable
-                onChange={handleUploadComplete}
-            />
-            {imageUrl && (
-                <div className="mt-4">
-                    <p>Uploaded Image:</p>
-                    <img src={imageUrl} alt="Uploaded" style={{ maxWidth: '100%' }} />
-                </div>
-            )}
-        </div>
+        <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+                if (e.target.files && e.target.files[0]) {
+                    handleUpload(e.target.files[0]);
+                }
+            }}
+        />
     );
 };
 

@@ -25,6 +25,7 @@ const Playground = () => {
   const [savedData, setSavedData] = useState<SavedData | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [uploadMessage, setUploadMessage] = useState('');
 
   const openDialog = () => setIsDialogOpen(true);
   const closeDialog = () => setIsDialogOpen(false);
@@ -35,7 +36,7 @@ const Playground = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('/api/links/addLink', { name, url: savedData?.url });
+      const response = await axios.post('/api/links/addLink', { name, imageUrl: savedData?.url });
       setSavedData(response.data);
       setName('');
       closeDialog();
@@ -52,6 +53,12 @@ const Playground = () => {
       ...(prevData || { id: '', name: '', url: '' }),
       url
     }));
+    setUploadMessage('Uploaded');
+  };
+
+  const handleUploadComplete = (url: string) => {
+    setUploadMessage('Upload Complete');
+    // Additional actions can be added here if needed
   };
 
   return (
@@ -82,7 +89,8 @@ const Playground = () => {
                 required
               />
             </div>
-            <UploadcareComponent onUpload={handleUpload} />
+            <UploadcareComponent onUpload={handleUpload} onUploadComplete={handleUploadComplete} />
+            {uploadMessage && <p className="text-green-500 mt-2">{uploadMessage}</p>}
             <DialogFooter>
               <Button type="submit" className="bg-blue-500 text-white" disabled={loading}>
                 {loading ? 'Saving...' : 'Save Changes'}
