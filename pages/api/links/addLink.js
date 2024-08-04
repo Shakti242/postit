@@ -4,16 +4,13 @@ const prisma = new PrismaClient();
 
 export default async function handler(req, res) {
     if (req.method === 'POST') {
-        const { name, imageUrl } = req.body;
-        if (!name || !imageUrl) {
-            return res.status(400).json({ error: 'Name and Image URL are required' });
-        }
+        const { name, url } = req.body;
         try {
-            console.log(name, imageUrl); // Logs the received data to the console for debugging
+            console.log(name, url);
             const newLink = await prisma.link.create({
-                data: { name, url: imageUrl }, // Use `url` field in Prisma schema
+                data: { name, url },
             });
-            res.status(200).json(newLink);
+            res.status(200).json(newLink); // Return the new link with its id
         } catch (error) {
             console.error('Error saving link:', error); // Logs error details for debugging
             res.status(500).json({ error: 'Failed to save link' });
