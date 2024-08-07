@@ -1,6 +1,6 @@
 import "./globals.css"
 import Nav from "./Nav"
-import { Roboto } from "@next/font/google"
+import { Roboto } from 'next/font/google';
 import AuthContext from "./auth/AuthContext"
 import QueryWrapper from "./QueryWrapper"
 

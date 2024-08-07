@@ -89,3 +89,8 @@
 .uploadcare--widget .uploadcare--button:hover {
   background-color: #0056b3;
 }
+
+.my-config {
+  --uc-primary-oklch-dark: 69% 0.1768 258.4;
+  --uc-primary-oklch-light: 59% 0.22 264;
+}
