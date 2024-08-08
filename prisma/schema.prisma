@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:NGUfJtzsaEkaefMJyFrTqVrxNkcttLKx@postgres.railway.internal:5432/railway"
+  url      = "postgresql://postgres:BdgYJdCCysKZgHIvtnsIcOKfLISQHDVC@monorail.proxy.rlwy.net:59942/railway"
 }
 
 model User {
@@ -89,7 +89,8 @@ model VerificationToken {
 }
 
 model Link {
-  id   Int    @id @default(autoincrement())
-  name String
-  url  String
+  id               Int    @id @default(autoincrement())
+  name             String
+  url              String
+  uploadedImageURL String
 }

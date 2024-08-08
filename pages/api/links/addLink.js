@@ -4,11 +4,13 @@ const prisma = new PrismaClient();
 
 export default async function handler(req, res) {
     if (req.method === 'POST') {
-        const { name, url } = req.body;
+        const { name, url, uploadedImageURL } = req.body;
+        console.log(uploadedImageURL);
+
         try {
-            console.log(name, url);
+            console.log(name, url, uploadedImageURL);
             const newLink = await prisma.link.create({
-                data: { name, url },
+                data: { name, url, uploadedImageURL },
             });
             res.status(200).json(newLink); // Return the new link with its id
         } catch (error) {
